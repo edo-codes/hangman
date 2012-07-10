@@ -1,5 +1,8 @@
 The classic game of Hangman written in Haskell for console.
 
-The heart of the game is in the `turn` function. When given a `State` and a character it will either return a new `State` with `Okay` as condition or the old `State` with another `Condition` (error message).
+The heart of the game is in the `turn` function. When given a `State` and a
+character it will either return a new `State` with `Okay` as condition or the
+old `State` with another `Condition` (error message).
 
-I copied the word list from /usr/share/dict on my system. It came from cracklib, which comes by default in Arch Linux's core repo.
+I copied the word list from /usr/share/dict on my system. It came from cracklib,
+which comes by default in Arch Linux's core repo.
