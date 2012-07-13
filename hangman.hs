@@ -3,16 +3,18 @@ import Data.Char (isAlpha, toUpper)
 import Data.List (intersperse)
 import System.IO (hSetBuffering, stdin, BufferMode (NoBuffering) )
 
+lang = EN
+
 main :: IO ()
 main = do hSetBuffering stdin NoBuffering
-          f <- readFile "wordlist"
+          f <- readFile $ show lang
           startplaying $ lines f
 
 startplaying :: [String] -> IO ()
 startplaying words = do index <- randomRIO (0,length words)
                         let beg = beginstate $ words !! index
                         playgame beg
-                        putStrLn "Play another game? [y/n]"
+                        putStrLn $ strings lang "Another"
                         ans   <- getChar
                         case ans of
                            'n' -> return ()
@@ -23,23 +25,23 @@ playgame state
    | condition state == AlreadyGuessed = newguess
    | condition state == InvalidLetter  = newguess
    | condition state == Win            = do putStrLn $ formatState state
-                                            putStrLn "Congratulations! You got it!"
+                                            putStrLn $ strings lang "Won"
                                             return ()
    | condition state == Loss           = do putStrLn $ formatState state
-                                            putStrLn $ "You're dead. The word was " ++ word state
+                                            putStrLn $ (strings lang "Lost") ++ word state
                                             return ()
    | condition state == Okay           = newguess
    where newguess = do putStrLn $ formatState state
-                       putStrLn "\nPick a letter"
+                       putStrLn $ "\n" ++ (strings lang "Pick")
                        l <- getChar
                        putStr "\n"
                        playgame $ turn state l
 
 formatState :: State -> String
-formatState state = "\n\n\n\n\n" ++ 
+formatState state = "\ESC[2J" ++ 
                     unlines [ hangman !! tries state
                             , showprogress
-                            , "letters used: " ++ intersperse ' ' (guessed state)
+                            , (strings lang "Used") ++ intersperse ' ' (guessed state)
                             ]
    where showprogress = zipWith (\x y -> if y then x else '_') (word state) (progress state)
 
@@ -210,3 +212,21 @@ hangman = [ unlines  [ ""
                      , "|___"
                      ]
           ]
+
+strings :: Language -> String -> String
+strings NL s = case s of
+                  "Another" -> "Wil je nog een keer spelen? [y/n]"
+                  "Won"     -> "Gefeliciteerd! Je hebt het woord geraden!"
+                  "Lost"    -> "Je bent dood. Het woord was "
+                  "Pick"    -> "Kies een letter"
+                  "Used"    -> "Gebruikte letters: "
+strings EN s = case s of
+                  "Another" -> "Play another game? [y/n]"
+                  "Won"     -> "Congratulations! You got it!"
+                  "Lost"    -> "You're dead. The word was "
+                  "Pick"    -> "Pick a letter"
+                  "Used"    -> "Used letters: "
+
+data Language = NL
+              | EN
+              deriving (Show)
