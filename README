@@ -4,4 +4,5 @@ I copied the English word list from /usr/share/dict on my system. It came from
 cracklib, which comes by default in Arch Linux's core repo. The Dutch word list
 comes from OpenTaal (http://www.opentaal.org/).
 
-I had help on StackExchange Code Review: http://codereview.stackexchange.com/questions/18497/hangman-is-this-small-haskell-game-clean-and-idiomatic-haskell-code
+I had help on StackExchange Code Review:
+http://codereview.stackexchange.com/questions/18497/hangman-is-this-small-haskell-game-clean-and-idiomatic-haskell-code
